@@ -1,0 +1,144 @@
+\documentclass[
+handout,
+9pt
+]{template/mybeamer}
+
+\usepackage[latin1]{inputenc}
+\usepackage[backend=bibtex, style=authoryear, maxnames=2]{biblatex}
+
+%\bibliography{references}
+
+\title{A beamer template for TIMA (non-official)}
+\subtitle{}
+
+\titlegraphic{
+  \vspace{.3cm}
+  \includegraphics[height=1.5cm]{template/tima_logo_cut.pdf}
+}
+
+\date{7 décembre 2017}
+
+\logo{\hyperlinkpresentationstart{\includegraphics[height=8.75ex]{template/tima_logo_cut.pdf}}}
+
+\author{Jean Simatic}
+
+\institute{Univ. Grenoble Alpes, CNRS, Grenoble INP, TIMA}
+
+\AtBeginSection[]{
+%  \subsection*{Plan}
+%  \againframe<all:\thesection>[plain]{plan}
+}
+
+
+\begin{document}
+
+\begin{frame}[plain]
+  \maketitle
+\end{frame}
+
+\frame<all:0>[label=plan]{}
+\frame<all:0>[label=dummy]{}
+
+\section{Main features}
+
+\subsection{About this template}
+
+\frame{
+  I designed this template for my PhD defense with the following
+  features :
+  
+  \begin{itemize}
+  \item Color theme matching the TIMA logo colors. Integration of TIMA
+    logo.
+  \item The presentation structure defines the frame titles.
+  \item Progression in the presentation explicited at global level
+    (slide numbering), section level (section names) and subsection
+    level (progress bar per section).
+  \item Fast navigation through slides.
+  \end{itemize}
+
+  \structure{Enjoy!}
+  
+  \begin{block}{Block}
+
+  \end{block}
+
+  \begin{alertblock}{Alert block}
+
+  \end{alertblock}
+
+  \begin{exampleblock}{Example block}
+
+  \end{exampleblock}
+}
+
+\subsection{Frame elements are defined by presentation structure}
+
+\section[Structure]{Section name does not appear by default}
+
+\subsection{Frame elements are defined by presentation structure}
+
+\frame{
+  \begin{itemize}
+  \item Section (short) names are in the top blue box. The current
+    section is highlighted.
+  \item The current subsection name is the frametitle in the turquoise
+    box.
+  \item If defined, subsubsection name is appended to the frametitle.
+  \end{itemize}
+}
+
+\subsection{Subsection name}
+
+\subsubsection{subsubsection name}
+
+\frame{
+  Like this.
+}
+
+\section{Navigation}
+
+\subsection{Navigation throughout frames}
+\frame{
+  \begin{itemize}
+  \item Section names are clickable to move to the corresponding section.
+  \item Circles left to the frametitle allow browsing subsections of the
+    current section.
+  \item The logo to the presentation start.
+  \end{itemize}
+}
+
+\section{Misc}
+
+\subsection{Sources}
+
+\frame{
+  \structure{Github:} \url{https://github.com/jsimatic/beamer_tima}
+
+  \begin{alertblock}{}
+    Feel free to suggest improvements.
+  \end{alertblock}
+}
+
+\subsection{Known caveats}
+
+\frame{
+  \begin{itemize}
+  \item The TIMA logo is a modified version. The font has been altered
+    during vectorization. The logo has been cropped on the left to get
+    the right blue/turquoise ratio.
+  \item Spacing in the section bar is static. The width of the bar can
+    be changed at \url{template/beamerouterthemesmalltree.sty} (line
+    131).
+  \item Slide numbering may not correctly work with appendices.
+  \item Dirty relative import of custom color and outer themes.
+  \end{itemize}
+}
+
+
+\begin{frame}[plain]
+  \maketitle
+\end{frame}
+
+\end{document}
+
