@@ -1,0 +1,156 @@
+% Copyright 2007 by Till Tantau
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Public License.
+%
+% See the file doc/licenses/LICENSE for more details.
+
+\setbeamersize{text margin left=.5cm,text margin right=.5cm}
+
+\newif\ifbeamer@sb@subsection
+
+\DeclareOptionBeamer{subsection}[true]{\csname beamer@sb@subsection#1\endcsname}
+\ExecuteOptionsBeamer{subsection=true}
+\ProcessOptionsBeamer
+
+\mode<presentation>
+
+\setbeamercolor{frametitle}{parent=palette primary}
+\setbeamercolor{subsection in head/foot}{parent=palette primary}
+\setbeamercolor{section in head/foot}{parent=palette quaternary}
+
+\beamer@compresstrue
+
+\AtBeginDocument{
+  {
+    \usebeamerfont*{headline}
+    \colorlet{global.bg}{bg}
+    \usebeamercolor{subsection in head/foot}
+    \usebeamercolor{section in head/foot}
+    \usebeamercolor{frametitle}
+
+    \ifbeamer@sb@subsection
+      \pgfdeclareverticalshading{beamer@mybarshade}{\the\paperwidth}{%
+         color(0ex)=(global.bg);%
+         color(1ex)=(subsection in head/foot.bg);%
+         color(6.05ex)=(subsection in head/foot.bg);%
+         color(6.05ex)=(section in head/foot.fg);%
+         color(6.15ex)=(section in head/foot.fg);%
+         color(6.15ex)=(section in head/foot.bg);%
+         color(9.35ex)=(section in head/foot.bg)%
+       }
+       \pgfdeclareverticalshading{beamer@aboveframetitle}{\the\paperwidth}{%
+         color(0ex)=(frametitle.bg);%
+         color(1ex)=(frametitle.bg);%
+         color(2ex)=(subsection in head/foot.bg)
+       }
+    \else
+      \pgfdeclareverticalshading{beamer@barshade}{\the\paperwidth}{%
+         color(0ex)=(global.bg);%
+         color(1ex)=(section in head/foot.bg);%
+         color(7ex)=(section in head/foot.bg)%
+       }
+     \pgfdeclareverticalshading{beamer@aboveframetitle}{\the\paperwidth}{%
+         color(0ex)=(frametitle.bg);%
+         color(1ex)=(frametitle.bg);%
+         color(2ex)=(section in head/foot.bg)
+       }
+    \fi  
+
+    \pgfdeclareverticalshading{beamer@belowframetitle}{\the\paperwidth}{%
+      color(0ex)=(global.bg);%
+      color(1ex)=(frametitle.bg)
+    }
+  }
+}
+
+\defbeamertemplate*{my mini frame}{default}{%
+  \begin{pgfpicture}{0pt}{0pt}{5pt}{5pt}
+    \pgfpathcircle{\pgfpoint{0pt}{2.5pt}}{2pt}
+    \pgfusepath{fill,stroke}
+  \end{pgfpicture}%
+}
+[action]
+{
+  \setbeamersize{mini frame size=.14cm}
+}
+
+\defbeamertemplate*{my mini frame in current subsection}{default}{%
+  \begin{pgfpicture}{0pt}{0pt}{5pt}{5pt}
+    \pgfpathcircle{\pgfpoint{0pt}{2.5pt}}{2pt}
+    \pgfusepath{stroke}
+  \end{pgfpicture}%
+}
+
+
+\defbeamertemplate*{slide progress}{default}
+{%
+  \raisebox{-1.8pt}{\begin{tikzpicture}
+    \pgfmathparse{(360*\insertframenumber)/\inserttotalframenumber};
+    \def\res{\pgfmathresult}
+    \fill[bleu] (0,0) -- (0,5pt) arc(90:90+(360*\insertframenumber)/\inserttotalframenumber:5pt) -- cycle;
+    \node[draw, circle, bleu, font=\scriptsize\bf, inner sep=1pt, minimum size=10.5pt] at (0, 0) {\textcolor{white}{\insertframenumber{}}};
+  \end{tikzpicture}}
+}
+
+\def\insertsubsectionnavigationmini#1#2{%
+  \beamer@currentsubsection=0%
+  \def\sectionentry##1##2##3##4##5{}%
+  \def\slideentry##1##2##3##4##5##6{\ifnum##6=\c@part\ifnum##1=\c@section%
+    \ifnum##2>\beamer@currentsubsection%
+    \beamer@currentsubsection=##2%
+    \box\beamer@sectionbox\hskip.1ex%
+    \setbox\beamer@sectionbox=
+    \hbox{\def\insertsubsectionhead{##5}%
+      \def\insertsectionheadnumber{##1}%
+      \def\insertsubsectionheadnumber{##2}%
+      \def\insertpartheadnumber{##6}%
+      \ifnum\c@subsection=##2%
+      \beamer@link(##4){{\usebeamertemplate{my mini frame}}}\else%
+      \beamer@link(##4){{\usebeamertemplate{my mini frame in current subsection}}}\fi}%
+    \ht\beamer@sectionbox=1.875ex%
+    \dp\beamer@sectionbox=0.75ex%
+    \fi\fi\fi\ignorespaces}%
+  #1\hskip.1cm\dohead \box\beamer@sectionbox\hskip.3cm%
+  #2}
+
+\setbeamerfont{section in head/foot}{series=\bfseries, size=\scriptsize}
+
+% Head
+\defbeamertemplate*{headline}{smalltree theme}
+{%
+  \pgfuseshading{beamer@mybarshade}%
+  \ifbeamer@sb@subsection%
+    \vskip-9.35ex%
+  \else%
+    \vskip-7ex%
+  \fi%
+  \begin{beamercolorbox}[ignorebg,ht=2.35ex,dp=1.125ex]{section in head/foot}
+    \insertsectionnavigationhorizontal{.95\paperwidth}{}{}
+  \end{beamercolorbox}%
+  \ifbeamer@sb@subsection
+  \begin{beamercolorbox}[ignorebg,ht=3.8ex,dp=1.125ex,%
+    leftskip=.3cm,rightskip=.065\paperwidth]{subsection in head/foot}
+    \insertsubsectionnavigationmini{}{}
+    \usebeamerfont{subsection in head/foot}\insertsubsectionhead{}
+    \ifx\insertsubsubsection\empty\else --- \insertsubsubsectionhead\fi
+    \hfill \usebeamertemplate{slide progress}
+  \end{beamercolorbox}%
+  \fi%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=north east, yshift=1pt, inner sep=0pt, outer sep=0pt] at (current page.north east) {\insertlogo};
+  \end{tikzpicture}
+  \vskip3ex
+}%
+
+\defbeamertemplate*{frametitle}{smalltree theme}{}
+
+\defbeamertemplate*{sidebar right}{smalltree theme}{}
+
+\defbeamertemplate*{footline}{smalltree theme}{}
+
+
+\mode
+<all>
